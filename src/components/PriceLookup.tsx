@@ -8,7 +8,9 @@ import {
   useSyncExternalStore,
   useTransition,
 } from "react";
-import { formatYen } from "@/lib/format";
+import { formatPrice } from "@/lib/currency";
+import { useCurrency } from "@/lib/useCurrency";
+import { CurrencySelector } from "./CurrencySelector";
 import type { CardDetailResponse, CardSummary } from "@/lib/types";
 
 type RecentItem = {
@@ -68,6 +70,7 @@ function saveRecent(item: RecentItem) {
 }
 
 export function PriceLookup() {
+  const { currency } = useCurrency();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<CardSummary[]>([]);
   const [selected, setSelected] = useState<CardDetailResponse | null>(null);
@@ -178,6 +181,8 @@ export function PriceLookup() {
             Japanese market.
           </p>
         </div>
+
+        <CurrencySelector />
 
         <form
           className="search-form"
@@ -325,14 +330,14 @@ export function PriceLookup() {
                 <span className="label">Lowest listed</span>
                 <span className="value">
                   {selected.meta.lowestYen != null
-                    ? formatYen(selected.meta.lowestYen)
+                    ? formatPrice(selected.meta.lowestYen, currency)
                     : "—"}
                 </span>
                 <span className="range">
                   {selected.meta.listingCount} Bigweb listing
                   {selected.meta.listingCount === 1 ? "" : "s"}
                   {selected.meta.highestYen != null
-                    ? ` · up to ${formatYen(selected.meta.highestYen)}`
+                    ? ` · up to ${formatPrice(selected.meta.highestYen, currency)}`
                     : ""}
                 </span>
               </div>
@@ -408,7 +413,7 @@ export function PriceLookup() {
                     {listing.rarity}
                   </span>
                   <span className="condition">{listing.condition}</span>
-                  <span className="yen">{formatYen(listing.priceYen)}</span>
+                  <span className="yen">{formatPrice(listing.priceYen, currency)}</span>
                 </div>
               ))}
             </div>
