@@ -52,7 +52,7 @@ function subscribeCurrency(onStoreChange: () => void) {
 }
 
 function isValidCurrency(code: string): boolean {
-  return ["JPY", "USD", "EUR", "GBP", "AUD", "CAD"].includes(code);
+  return ["JPY", "USD", "EUR", "GBP", "AUD", "CAD", "SGD"].includes(code);
 }
 
 function setCurrency(currency: CurrencyCode) {
@@ -76,7 +76,7 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
   const currency = useSyncExternalStore(
     subscribeCurrency,
     readCurrencySnapshot,
-    () => "JPY",
+    () => "JPY" as CurrencyCode,
   );
 
   return (
