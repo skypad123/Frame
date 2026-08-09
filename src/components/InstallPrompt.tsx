@@ -1,24 +1,51 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>;
   userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 };
 
-function detectStandalone() {
-  if (typeof window === "undefined") return false;
-  return (
-    window.matchMedia("(display-mode: standalone)").matches ||
-    ("standalone" in navigator &&
-      Boolean((navigator as Navigator & { standalone?: boolean }).standalone))
-  );
+type EnvSnapshot = {
+  isIos: boolean;
+  isStandalone: boolean;
+};
+
+const serverEnv: EnvSnapshot = { isIos: false, isStandalone: false };
+let clientEnv: EnvSnapshot = serverEnv;
+
+function readEnv(): EnvSnapshot {
+  if (typeof window === "undefined") return serverEnv;
+
+  const next: EnvSnapshot = {
+    isStandalone:
+      window.matchMedia("(display-mode: standalone)").matches ||
+      ("standalone" in navigator &&
+        Boolean((navigator as Navigator & { standalone?: boolean }).standalone)),
+    isIos: /iPad|iPhone|iPod/.test(window.navigator.userAgent),
+  };
+
+  if (
+    next.isIos === clientEnv.isIos &&
+    next.isStandalone === clientEnv.isStandalone
+  ) {
+    return clientEnv;
+  }
+
+  clientEnv = next;
+  return clientEnv;
 }
 
-function detectIos() {
-  if (typeof window === "undefined") return false;
-  return /iPad|iPhone|iPod/.test(window.navigator.userAgent);
+function subscribeEnv(onStoreChange: () => void) {
+  const media = window.matchMedia("(display-mode: standalone)");
+  const onChange = () => onStoreChange();
+  media.addEventListener?.("change", onChange);
+  window.addEventListener("resize", onChange);
+  return () => {
+    media.removeEventListener?.("change", onChange);
+    window.removeEventListener("resize", onChange);
+  };
 }
 
 export function InstallPrompt() {
@@ -26,8 +53,7 @@ export function InstallPrompt() {
     null,
   );
   const [dismissed, setDismissed] = useState(false);
-  const [isIos] = useState(detectIos);
-  const [isStandalone] = useState(detectStandalone);
+  const env = useSyncExternalStore(subscribeEnv, readEnv, () => serverEnv);
 
   useEffect(() => {
     const onBeforeInstall = (event: Event) => {
@@ -39,7 +65,7 @@ export function InstallPrompt() {
     return () => window.removeEventListener("beforeinstallprompt", onBeforeInstall);
   }, []);
 
-  if (isStandalone || dismissed) return null;
+  if (env.isStandalone || dismissed) return null;
 
   if (deferred) {
     return (
@@ -64,7 +90,7 @@ export function InstallPrompt() {
     );
   }
 
-  if (isIos) {
+  if (env.isIos) {
     return (
       <div className="install-banner">
         <p>

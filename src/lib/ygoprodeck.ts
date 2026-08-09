@@ -80,3 +80,13 @@ export async function getCardById(id: number): Promise<YgoCard | null> {
   );
   return cards[0] ?? null;
 }
+
+export async function getCardByExactName(name: string): Promise<YgoCard | null> {
+  const cards = await fetchCards(
+    new URLSearchParams({
+      name,
+      misc: "yes",
+    }),
+  );
+  return cards[0] ?? null;
+}

@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { normalizeQuery } from "@/lib/format";
-import { searchCards, toCardSummary } from "@/lib/ygoprodeck";
+import { containsJapanese, normalizeQuery } from "@/lib/format";
+import {
+  getCardByExactName,
+  searchCards,
+  toCardSummary,
+} from "@/lib/ygoprodeck";
+import { searchJapaneseNames } from "@/lib/ygorganization";
 import type { SearchResponse } from "@/lib/types";
 
 export async function GET(request: NextRequest) {
@@ -14,6 +19,21 @@ export async function GET(request: NextRequest) {
   }
 
   try {
+    if (containsJapanese(query)) {
+      const jpMatches = await searchJapaneseNames(query, 16);
+      const cards = (
+        await Promise.all(
+          jpMatches.map(async (match) => getCardByExactName(match.englishName)),
+        )
+      ).filter((card): card is NonNullable<typeof card> => Boolean(card));
+
+      const body: SearchResponse = {
+        query,
+        results: cards.map(toCardSummary),
+      };
+      return NextResponse.json(body);
+    }
+
     const cards = await searchCards(query, 16);
     const body: SearchResponse = {
       query,

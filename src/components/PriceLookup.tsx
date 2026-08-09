@@ -20,18 +20,26 @@ type RecentItem = {
 
 const RECENT_KEY = "frame-recent-cards";
 const recentListeners = new Set<() => void>();
+let recentSnapshot: RecentItem[] = [];
+let recentSnapshotRaw = "";
 
 function emitRecentChange() {
   recentListeners.forEach((listener) => listener());
 }
 
-function readRecent(): RecentItem[] {
-  if (typeof window === "undefined") return [];
+function readRecentSnapshot(): RecentItem[] {
+  if (typeof window === "undefined") return recentSnapshot;
+
   try {
-    const raw = localStorage.getItem(RECENT_KEY);
-    return raw ? (JSON.parse(raw) as RecentItem[]) : [];
+    const raw = localStorage.getItem(RECENT_KEY) ?? "";
+    if (raw === recentSnapshotRaw) return recentSnapshot;
+    recentSnapshotRaw = raw;
+    recentSnapshot = raw ? (JSON.parse(raw) as RecentItem[]) : [];
+    return recentSnapshot;
   } catch {
-    return [];
+    recentSnapshotRaw = "";
+    recentSnapshot = [];
+    return recentSnapshot;
   }
 }
 
@@ -50,9 +58,12 @@ function subscribeRecent(onStoreChange: () => void) {
 function saveRecent(item: RecentItem) {
   const next = [
     item,
-    ...readRecent().filter((entry) => entry.id !== item.id),
+    ...readRecentSnapshot().filter((entry) => entry.id !== item.id),
   ].slice(0, 8);
-  localStorage.setItem(RECENT_KEY, JSON.stringify(next));
+  const raw = JSON.stringify(next);
+  localStorage.setItem(RECENT_KEY, raw);
+  recentSnapshotRaw = raw;
+  recentSnapshot = next;
   emitRecentChange();
 }
 
@@ -66,7 +77,11 @@ export function PriceLookup() {
   const [rarityFilter, setRarityFilter] = useState("all");
   const inputRef = useRef<HTMLInputElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const recent = useSyncExternalStore(subscribeRecent, readRecent, () => []);
+  const recent = useSyncExternalStore(
+    subscribeRecent,
+    readRecentSnapshot,
+    () => recentSnapshot,
+  );
 
   useEffect(() => {
     inputRef.current?.focus();
