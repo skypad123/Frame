@@ -279,7 +279,10 @@ export function PriceLookup() {
                   })
                 }
               >
-                {item.japaneseName || item.name}
+                <span className="recent-chip-content">
+                  <span className="recent-jp">{item.japaneseName || item.name}</span>
+                  <span className="recent-en">{item.name}</span>
+                </span>
               </button>
             ))}
           </div>
