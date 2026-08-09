@@ -20,7 +20,7 @@ type YuyuteiItem = {
 };
 
 export function yuyuteiSearchUrl(japaneseName: string): string {
-  return `https://yuyu-tei.jp/game_ygo/sell/sell_price.php?name=${encodeURIComponent(japaneseName)}`;
+  return `https://yuyu-tei.jp/sell/ygo/s/search?search_word=${encodeURIComponent(japaneseName)}`;
 }
 
 /**
