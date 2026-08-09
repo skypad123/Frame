@@ -1,6 +1,15 @@
 import type { OcgListing } from "@/lib/types";
 import * as cheerio from "cheerio";
 
+/**
+ * Yuyutei scraper for Yu-Gi-Oh! OCG card prices.
+ * 
+ * Note: This implementation uses web scraping since Yuyutei doesn't provide
+ * a public API. The HTML structure may change over time and require updates.
+ * The scraper gracefully degrades - if parsing fails, it returns an empty
+ * array without breaking the overall price fetch.
+ */
+
 type YuyuteiItem = {
   name: string;
   setCode: string;
@@ -16,51 +25,89 @@ export function yuyuteiSearchUrl(japaneseName: string): string {
 
 /**
  * Parse Yuyutei's HTML to extract card listings.
- * Note: This is a basic implementation that may need adjustments
- * based on actual Yuyutei HTML structure.
+ * Tries multiple selector patterns to handle different HTML structures.
  */
 function parseYuyuteiHtml(html: string, searchName: string): YuyuteiItem[] {
   const $ = cheerio.load(html);
   const items: YuyuteiItem[] = [];
 
-  // Yuyutei typically shows cards in a table structure
-  // This selector will need to be verified against actual HTML
-  $("table.card_list tr").each((_, row) => {
-    const $row = $(row);
-    
-    // Skip header rows
-    if ($row.hasClass("head")) return;
+  // Try multiple common patterns for Yuyutei listings
+  const selectors = [
+    "table.card_list tr",
+    "table.item_list tr", 
+    ".card-list-item",
+    ".item-box",
+    "tr.item",
+    ".product-row"
+  ];
 
-    try {
-      const name = $row.find(".card_name").text().trim();
-      const setInfo = $row.find(".set_name").text().trim();
-      const rarity = $row.find(".rarity").text().trim();
-      const condition = $row.find(".condition").text().trim() || "NM";
-      const priceText = $row.find(".price").text().trim();
-      const stockText = $row.find(".stock").text().trim();
+  for (const selector of selectors) {
+    const elements = $(selector);
+    if (elements.length > 0) {
+      elements.each((_, element) => {
+        const $elem = $(element);
+        
+        // Skip header rows
+        if ($elem.hasClass("head") || $elem.hasClass("header")) return;
 
-      // Extract price (remove ¥ and commas)
-      const priceMatch = priceText.match(/[\d,]+/);
-      const price = priceMatch
-        ? Number(priceMatch[0].replace(/,/g, ""))
-        : 0;
+        try {
+          // Try multiple ways to extract card name
+          const name = 
+            $elem.find(".card_name, .card-name, .item-name, .product-name").text().trim() ||
+            $elem.find("td").first().text().trim();
 
-      const inStock = !stockText.includes("売切") && !stockText.includes("×");
+          if (!name) return;
 
-      if (name && price > 0) {
-        items.push({
-          name,
-          setCode: setInfo || "Unknown",
-          rarity: rarity || "?",
-          condition: mapYuyuteiCondition(condition),
-          price,
-          inStock,
-        });
-      }
-    } catch (error) {
-      console.warn("Failed to parse Yuyutei row:", error);
+          // Extract set info
+          const setInfo = 
+            $elem.find(".set_name, .set-info, .card-set").text().trim() ||
+            "Unknown";
+
+          // Extract rarity
+          const rarity = 
+            $elem.find(".rarity, .card-rarity").text().trim() ||
+            "?";
+
+          // Extract condition
+          const condition = 
+            $elem.find(".condition, .card-condition").text().trim() ||
+            "NM";
+
+          // Extract price
+          const priceText = 
+            $elem.find(".price, .card-price, .item-price, .product-price").text().trim() ||
+            $elem.find("td").last().text().trim();
+
+          const priceMatch = priceText.match(/[\d,]+/);
+          const price = priceMatch
+            ? Number(priceMatch[0].replace(/,/g, ""))
+            : 0;
+
+          // Check stock status
+          const stockText = $elem.find(".stock, .card-stock, .availability").text().trim();
+          const inStock = !stockText.includes("売切") && 
+                         !stockText.includes("×") && 
+                         !stockText.includes("在庫なし");
+
+          if (name && price > 0) {
+            items.push({
+              name,
+              setCode: setInfo,
+              rarity,
+              condition: mapYuyuteiCondition(condition),
+              price,
+              inStock,
+            });
+          }
+        } catch (error) {
+          // Silently continue on parsing errors
+        }
+      });
+
+      // If we found items with this selector, stop trying others
+      if (items.length > 0) break;
     }
-  });
+  }
 
   return items;
 }
@@ -130,23 +177,33 @@ export async function fetchYuyuteiListings(
     });
 
     if (!response.ok) {
-      console.error(`Yuyutei fetch failed (${response.status})`);
+      console.warn(`Yuyutei fetch returned status ${response.status} for "${japaneseName}"`);
       return [];
     }
 
     const html = await response.text();
     const items = parseYuyuteiHtml(html, japaneseName);
 
+    if (items.length === 0) {
+      console.log(`No Yuyutei listings found for "${japaneseName}"`);
+      return [];
+    }
+
     // Prefer exact Japanese name matches
     const exact = items.filter((item) => item.name === japaneseName);
     const selected = exact.length > 0 ? exact : items;
 
-    return selected
+    const listings = selected
       .map((item, index) => mapYuyuteiListing(item, index))
       .filter((listing) => listing.priceYen > 0 && listing.inStock)
       .sort((a, b) => a.priceYen - b.priceYen);
+
+    console.log(`Fetched ${listings.length} Yuyutei listings for "${japaneseName}"`);
+    return listings;
   } catch (error) {
-    console.error("Yuyutei fetch error:", error);
+    console.warn(`Yuyutei fetch error for "${japaneseName}":`, error);
+    // Return empty array instead of throwing - we don't want Yuyutei failures
+    // to break the entire price fetch
     return [];
   }
 }
