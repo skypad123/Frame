@@ -27,7 +27,7 @@ export function yuyuteiSearchUrl(japaneseName: string): string {
  * Parse Yuyutei's HTML to extract card listings.
  * Tries multiple selector patterns to handle different HTML structures.
  */
-function parseYuyuteiHtml(html: string, searchName: string): YuyuteiItem[] {
+function parseYuyuteiHtml(html: string): YuyuteiItem[] {
   const $ = cheerio.load(html);
   const items: YuyuteiItem[] = [];
 
@@ -99,7 +99,7 @@ function parseYuyuteiHtml(html: string, searchName: string): YuyuteiItem[] {
               inStock,
             });
           }
-        } catch (error) {
+        } catch {
           // Silently continue on parsing errors
         }
       });
@@ -182,7 +182,7 @@ export async function fetchYuyuteiListings(
     }
 
     const html = await response.text();
-    const items = parseYuyuteiHtml(html, japaneseName);
+    const items = parseYuyuteiHtml(html);
 
     if (items.length === 0) {
       console.log(`No Yuyutei listings found for "${japaneseName}"`);
