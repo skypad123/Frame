@@ -78,6 +78,7 @@ export function PriceLookup() {
   const [isSearching, startSearch] = useTransition();
   const [isLoadingCard, startLoadCard] = useTransition();
   const [rarityFilter, setRarityFilter] = useState("all");
+  const [expandedListing, setExpandedListing] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const recent = useSyncExternalStore(
@@ -139,6 +140,7 @@ export function PriceLookup() {
       setError(null);
       setSelected(null);
       setRarityFilter("all");
+      setExpandedListing(null);
       try {
         const response = await fetch(`/api/card/${card.id}`);
         const data = (await response.json()) as CardDetailResponse & {
@@ -334,7 +336,7 @@ export function PriceLookup() {
                     : "—"}
                 </span>
                 <span className="range">
-                  {selected.meta.listingCount} Bigweb listing
+                  {selected.meta.listingCount} listing
                   {selected.meta.listingCount === 1 ? "" : "s"}
                   {selected.meta.highestYen != null
                     ? ` · up to ${formatPrice(selected.meta.highestYen, currency)}`

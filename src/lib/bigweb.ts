@@ -1,5 +1,7 @@
 import type { OcgListing } from "@/lib/types";
 
+export { yuyuteiSearchUrl } from "@/lib/yuyutei";
+
 type BigwebItem = {
   id: number;
   name: string;
@@ -24,10 +26,6 @@ export function bigwebSearchUrl(japaneseName: string): string {
   return `https://bigweb.co.jp/ver2/yugioh_index.php?search=yes&type_id=9&action=search&shape=1&selecttext=${encoded}`;
 }
 
-export function yuyuteiSearchUrl(japaneseName: string): string {
-  return `https://yuyu-tei.jp/game_ygo/sell/sell_price.php?name=${encodeURIComponent(japaneseName)}`;
-}
-
 function mapListing(item: BigwebItem): OcgListing {
   return {
     id: item.id,
@@ -40,6 +38,7 @@ function mapListing(item: BigwebItem): OcgListing {
     inStock: !item.is_sold_out && Number(item.price) > 0,
     image: item.image,
     cardset: item.cardset?.web || item.cardset?.slip,
+    source: "bigweb",
   };
 }
 

@@ -66,6 +66,11 @@ export type OcgListing = {
   inStock: boolean;
   image?: string;
   cardset?: string;
+  source?: "bigweb" | "yuyutei";
+  allPrices?: Array<{
+    source: "bigweb" | "yuyutei";
+    priceYen: number;
+  }>;
 };
 
 export type CardDetailResponse = {

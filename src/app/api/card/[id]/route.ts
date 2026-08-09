@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import {
-  bigwebSearchUrl,
-  fetchBigwebListings,
-  yuyuteiSearchUrl,
-} from "@/lib/bigweb";
+import { bigwebSearchUrl, fetchBigwebListings } from "@/lib/bigweb";
+import { yuyuteiSearchUrl, fetchYuyuteiListings } from "@/lib/yuyutei";
+import { mergeListings } from "@/lib/mergeListings";
 import { containsJapanese } from "@/lib/format";
 import { getCardById, toCardSummary } from "@/lib/ygoprodeck";
 import { resolveJapaneseName } from "@/lib/ygorganization";
@@ -38,10 +36,16 @@ export async function GET(request: NextRequest, context: RouteContext) {
           : null,
     });
 
-    const listings = japaneseName
-      ? await fetchBigwebListings(japaneseName)
-      : [];
+    // Fetch from both sources in parallel
+    const [bigwebListings, yuyuteiListings] = japaneseName
+      ? await Promise.all([
+          fetchBigwebListings(japaneseName),
+          fetchYuyuteiListings(japaneseName),
+        ])
+      : [[], []];
 
+    // Merge listings showing the cheapest price for each rarity+condition
+    const listings = mergeListings(bigwebListings, yuyuteiListings);
     const priced = listings.filter((item) => item.priceYen > 0);
     const summary = toCardSummary(card);
     const prices = card.card_prices?.[0];
