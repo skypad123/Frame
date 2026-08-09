@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import {
-  bigwebSearchUrl,
-  fetchBigwebListings,
-  yuyuteiSearchUrl,
-} from "@/lib/bigweb";
+import { bigwebSearchUrl, fetchBigwebListings } from "@/lib/bigweb";
+import { yuyuteiSearchUrl, fetchYuyuteiListings } from "@/lib/yuyutei";
+import { mergeListings } from "@/lib/mergeListings";
 import { containsJapanese, normalizeQuery } from "@/lib/format";
 
 export async function GET(request: NextRequest) {
@@ -17,7 +15,15 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const listings = await fetchBigwebListings(name);
+    // Fetch from both sources in parallel
+    const [bigwebListings, yuyuteiListings] = await Promise.all([
+      fetchBigwebListings(name),
+      fetchYuyuteiListings(name),
+    ]);
+
+    // Merge listings showing the cheapest price for each rarity+condition
+    const listings = mergeListings(bigwebListings, yuyuteiListings);
+
     return NextResponse.json({
       japaneseName: name,
       listings,
