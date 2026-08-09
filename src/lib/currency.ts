@@ -1,4 +1,4 @@
-export type CurrencyCode = "JPY" | "USD" | "EUR" | "GBP" | "AUD" | "CAD";
+export type CurrencyCode = "JPY" | "USD" | "EUR" | "GBP" | "AUD" | "CAD" | "SGD";
 
 export type CurrencyInfo = {
   code: CurrencyCode;
@@ -14,6 +14,7 @@ export const CURRENCIES: Record<CurrencyCode, CurrencyInfo> = {
   GBP: { code: "GBP", symbol: "£", name: "British Pound", locale: "en-GB" },
   AUD: { code: "AUD", symbol: "A$", name: "Australian Dollar", locale: "en-AU" },
   CAD: { code: "CAD", symbol: "C$", name: "Canadian Dollar", locale: "en-CA" },
+  SGD: { code: "SGD", symbol: "S$", name: "Singapore Dollar", locale: "en-SG" },
 };
 
 // Approximate exchange rates from JPY (as of typical rates)
@@ -25,6 +26,7 @@ export const EXCHANGE_RATES: Record<CurrencyCode, number> = {
   GBP: 0.0053, // ~189 JPY = 1 GBP
   AUD: 0.0103, // ~97 JPY = 1 AUD
   CAD: 0.0092, // ~109 JPY = 1 CAD
+  SGD: 0.0090, // ~111 JPY = 1 SGD
 };
 
 export function convertFromYen(
