@@ -8,7 +8,9 @@ import {
   useSyncExternalStore,
   useTransition,
 } from "react";
-import { formatYen } from "@/lib/format";
+import { formatPrice } from "@/lib/currency";
+import { useCurrency } from "@/lib/useCurrency";
+import { CurrencySelector } from "./CurrencySelector";
 import type { CardDetailResponse, CardSummary } from "@/lib/types";
 
 type RecentItem = {
@@ -68,6 +70,7 @@ function saveRecent(item: RecentItem) {
 }
 
 export function PriceLookup() {
+  const { currency } = useCurrency();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<CardSummary[]>([]);
   const [selected, setSelected] = useState<CardDetailResponse | null>(null);
@@ -180,6 +183,8 @@ export function PriceLookup() {
             Japanese market.
           </p>
         </div>
+
+        <CurrencySelector />
 
         <form
           className="search-form"
@@ -327,14 +332,14 @@ export function PriceLookup() {
                 <span className="label">Lowest listed</span>
                 <span className="value">
                   {selected.meta.lowestYen != null
-                    ? formatYen(selected.meta.lowestYen)
+                    ? formatPrice(selected.meta.lowestYen, currency)
                     : "—"}
                 </span>
                 <span className="range">
                   {selected.meta.listingCount} listing
                   {selected.meta.listingCount === 1 ? "" : "s"}
                   {selected.meta.highestYen != null
-                    ? ` · up to ${formatYen(selected.meta.highestYen)}`
+                    ? ` · up to ${formatPrice(selected.meta.highestYen, currency)}`
                     : ""}
                 </span>
               </div>
@@ -395,61 +400,24 @@ export function PriceLookup() {
                 <span>Condition</span>
                 <span>Price</span>
               </div>
-              {visibleListings.map((listing, index) => {
-                const listingKey = `${listing.rarity}-${listing.condition}-${index}`;
-                const isExpanded = expandedListing === listingKey;
-                const hasMultipleSources =
-                  listing.allPrices && listing.allPrices.length > 1;
-
-                return (
-                  <div key={listingKey}>
-                    <button
-                      type="button"
-                      className={`listing-row ${hasMultipleSources ? "clickable" : ""}`}
-                      role="row"
-                      style={{ animationDelay: `${index * 28}ms` }}
-                      onClick={() =>
-                        hasMultipleSources
-                          ? setExpandedListing(isExpanded ? null : listingKey)
-                          : undefined
-                      }
-                    >
-                      <span className="set">
-                        <strong>{listing.setCode}</strong>
-                        <small>{listing.cardset}</small>
-                      </span>
-                      <span className="rarity" title={listing.rarityFull}>
-                        {listing.rarity}
-                      </span>
-                      <span className="condition">{listing.condition}</span>
-                      <span className="yen">
-                        <span className="price-value">
-                          {formatYen(listing.priceYen)}
-                        </span>
-                        <small className="price-source">
-                          {listing.source === "bigweb" ? "Bigweb" : "Yuyutei"}
-                          {hasMultipleSources && " (cheapest)"}
-                        </small>
-                      </span>
-                    </button>
-                    {isExpanded && hasMultipleSources && (
-                      <div className="price-breakdown">
-                        <span className="breakdown-label">All prices:</span>
-                        {listing.allPrices!.map((price, priceIndex) => (
-                          <div key={priceIndex} className="breakdown-item">
-                            <span className="breakdown-source">
-                              {price.source === "bigweb" ? "Bigweb" : "Yuyutei"}
-                            </span>
-                            <span className="breakdown-price">
-                              {formatYen(price.priceYen)}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+              {visibleListings.map((listing, index) => (
+                <div
+                  key={`${listing.id}-${listing.setCode}-${index}`}
+                  className="listing-row"
+                  role="row"
+                  style={{ animationDelay: `${index * 28}ms` }}
+                >
+                  <span className="set">
+                    <strong>{listing.setCode}</strong>
+                    <small>{listing.cardset}</small>
+                  </span>
+                  <span className="rarity" title={listing.rarityFull}>
+                    {listing.rarity}
+                  </span>
+                  <span className="condition">{listing.condition}</span>
+                  <span className="yen">{formatPrice(listing.priceYen, currency)}</span>
+                </div>
+              ))}
             </div>
           )}
         </section>

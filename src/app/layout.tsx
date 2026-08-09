@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Noto_Sans_JP, Syne } from "next/font/google";
 import { InstallPrompt } from "@/components/InstallPrompt";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
+import { CurrencyProvider } from "@/lib/useCurrency";
 import "./globals.css";
 
 const syne = Syne({
@@ -52,14 +53,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${syne.variable} ${noto.variable} h-full antialiased`}
     >
       <body className="min-h-full">
-        <div className="app-shell">
-          {children}
-          <InstallPrompt />
-          <footer className="site-footer">
-            Prices sourced from Bigweb Japanese market listings. Card data via
-            YGOPRODeck / YGOrganization. Not affiliated with Konami.
-          </footer>
-        </div>
+        <CurrencyProvider>
+          <div className="app-shell">
+            {children}
+            <InstallPrompt />
+            <footer className="site-footer">
+              Prices sourced from Bigweb Japanese market listings. Card data via
+              YGOPRODeck / YGOrganization. Not affiliated with Konami.
+            </footer>
+          </div>
+        </CurrencyProvider>
         <ServiceWorkerRegister />
       </body>
     </html>

@@ -124,6 +124,40 @@ a {
   gap: 0.55rem;
 }
 
+.currency-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+}
+
+.currency-label {
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--brass-soft);
+  margin: 0;
+}
+
+.currency-select {
+  border: 1px solid rgba(232, 213, 163, 0.28);
+  border-radius: 999px;
+  background: rgba(7, 20, 33, 0.65);
+  color: var(--paper);
+  padding: 0.55rem 0.95rem;
+  font: inherit;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.currency-select:hover,
+.currency-select:focus {
+  border-color: var(--brass);
+  outline: none;
+}
+
 .search-input {
   width: 100%;
   border: 1px solid rgba(232, 213, 163, 0.35);
