@@ -316,6 +316,25 @@ a {
   border-color: var(--brass);
 }
 
+.recent-chip-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  align-items: flex-start;
+}
+
+.recent-jp {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--paper);
+}
+
+.recent-en {
+  font-size: 0.78rem;
+  color: var(--paper-dim);
+  line-height: 1.2;
+}
+
 .solid-btn {
   border: 0;
   border-radius: 999px;
