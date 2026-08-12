@@ -43,11 +43,9 @@
     <rect x="146" y="60" width="28" height="12" fill="#8a96a4"/>
     <rect x="154" y="48" width="12" height="12" fill="#a8b4c0"/>
   </g>
-  <!-- lantern glow -->
-  <rect x="132" y="120" width="8" height="8" fill="#e8a838"/>
-  <rect x="180" y="120" width="8" height="8" fill="#e8a838"/>
-  <rect x="128" y="116" width="16" height="4" fill="#f4d58a" opacity="0.55"/>
-  <rect x="176" y="116" width="16" height="4" fill="#f4d58a" opacity="0.55"/>
+  <!-- gate lanterns (inset, no floating glow) -->
+  <rect x="134" y="126" width="4" height="4" fill="#e8a838"/>
+  <rect x="182" y="126" width="4" height="4" fill="#e8a838"/>
   <!-- path -->
   <rect x="146" y="148" width="28" height="32" fill="#3d4f3a"/>
   <rect x="150" y="152" width="20" height="28" fill="#4d6348"/>
