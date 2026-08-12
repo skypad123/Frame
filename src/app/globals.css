@@ -103,7 +103,7 @@ a {
   background-image:
     radial-gradient(circle at 12% 18%, var(--paper) 0 1px, transparent 2px),
     radial-gradient(circle at 42% 10%, var(--paper) 0 1px, transparent 2px),
-    radial-gradient(circle at 68% 22%, var(--lantern-soft) 0 1px, transparent 2px),
+    radial-gradient(circle at 68% 22%, var(--paper) 0 1px, transparent 2px),
     radial-gradient(circle at 86% 14%, var(--paper) 0 1px, transparent 2px),
     radial-gradient(circle at 24% 36%, var(--paper) 0 1px, transparent 2px);
   animation: twinkle 2.4s steps(2) infinite;
