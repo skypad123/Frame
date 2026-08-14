@@ -371,6 +371,13 @@ export function PriceLookup() {
                 >
                   Check Yuyutei
                 </a>
+                <a
+                  href={selected.sources.carousellSearchUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Search Carousell SG
+                </a>
               </div>
             </div>
           </div>

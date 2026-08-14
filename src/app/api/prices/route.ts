@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { bigwebSearchUrl, fetchBigwebListings } from "@/lib/bigweb";
+import { carousellSearchUrl } from "@/lib/carousell";
 import { yuyuteiSearchUrl, fetchYuyuteiListings } from "@/lib/yuyutei";
 import { mergeListings } from "@/lib/mergeListings";
 import { containsJapanese, normalizeQuery } from "@/lib/format";
@@ -30,6 +31,8 @@ export async function GET(request: NextRequest) {
       sources: {
         bigwebSearchUrl: bigwebSearchUrl(name),
         yuyuteiSearchUrl: yuyuteiSearchUrl(name),
+        // This route only receives a Japanese name; English is preferred when available
+        carousellSearchUrl: carousellSearchUrl(name),
       },
       meta: {
         listingCount: listings.length,
