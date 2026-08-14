@@ -88,6 +88,7 @@ export type CardDetailResponse = {
   sources: {
     bigwebSearchUrl: string;
     yuyuteiSearchUrl: string;
+    carousellSearchUrl: string;
   };
   meta: {
     listingCount: number;

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { bigwebSearchUrl, fetchBigwebListings } from "@/lib/bigweb";
+import { carousellSearchUrl } from "@/lib/carousell";
 import { yuyuteiSearchUrl, fetchYuyuteiListings } from "@/lib/yuyutei";
 import { mergeListings } from "@/lib/mergeListings";
 import { containsJapanese } from "@/lib/format";
@@ -70,6 +71,8 @@ export async function GET(request: NextRequest, context: RouteContext) {
         yuyuteiSearchUrl: japaneseName
           ? yuyuteiSearchUrl(japaneseName)
           : "https://yuyu-tei.jp/",
+        // Prefer English name — Carousell SG listings are typically English-titled
+        carousellSearchUrl: carousellSearchUrl(card.name),
       },
       meta: {
         listingCount: priced.length,
