@@ -1,5 +1,5 @@
-import { PriceLookup } from "@/components/PriceLookup";
+import { ArcadiaTombstone } from "@/components/ArcadiaTombstone";
 
 export default function Home() {
-  return <PriceLookup />;
+  return <ArcadiaTombstone />;
 }

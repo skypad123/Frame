@@ -2,17 +2,17 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Frame — OCG Price Lookup",
-    short_name: "Frame",
+    name: "Arcadia",
+    short_name: "Arcadia",
     description:
-      "Look up going prices for Yu-Gi-Oh! OCG Japanese cards at the shop counter.",
+      "Arcadia has been wound down. Thank you to our supporters — more projects to come.",
     start_url: "/",
     display: "standalone",
     orientation: "any",
-    background_color: "#0B1F33",
-    theme_color: "#0B1F33",
+    background_color: "#0a1628",
+    theme_color: "#0a1628",
     lang: "en",
-    categories: ["business", "utilities"],
+    categories: ["lifestyle"],
     icons: [
       {
         src: "/icons/icon-192.png",

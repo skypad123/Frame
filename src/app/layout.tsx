@@ -1,31 +1,27 @@
 import type { Metadata, Viewport } from "next";
-import { Noto_Sans_JP, Syne } from "next/font/google";
-import { InstallPrompt } from "@/components/InstallPrompt";
+import { Bitcount_Single, Quicksand } from "next/font/google";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
-import { CurrencyProvider } from "@/lib/useCurrency";
 import "./globals.css";
 
-const syne = Syne({
-  variable: "--font-syne",
+const bitcount = Bitcount_Single({
+  variable: "--font-bitcount",
   subsets: ["latin"],
-  weight: ["600", "700", "800"],
 });
 
-const noto = Noto_Sans_JP({
-  variable: "--font-noto",
+const quicksand = Quicksand({
+  variable: "--font-quicksand",
   subsets: ["latin"],
-  weight: ["400", "500", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "Frame — Yu-Gi-Oh! OCG Japanese Price Lookup",
+  title: "Arcadia — Thank You",
   description:
-    "Progressive web app for brick-and-mortar shops to look up going prices for Yu-Gi-Oh! OCG Japanese cards.",
-  applicationName: "Frame",
+    "Arcadia has been wound down. Thank you to our supporters and the team that contributed. More projects to come.",
+  applicationName: "Arcadia",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Frame",
+    title: "Arcadia",
   },
   formatDetection: {
     telephone: false,
@@ -40,7 +36,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0B1F33",
+  themeColor: "#0a1628",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -50,19 +46,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${syne.variable} ${noto.variable} h-full antialiased`}
+      className={`${bitcount.variable} ${quicksand.variable} h-full`}
     >
       <body className="min-h-full">
-        <CurrencyProvider>
-          <div className="app-shell">
-            {children}
-            <InstallPrompt />
-            <footer className="site-footer">
-              Prices sourced from Bigweb Japanese market listings. Card data via
-              YGOPRODeck / YGOrganization. Not affiliated with Konami.
-            </footer>
-          </div>
-        </CurrencyProvider>
+        {children}
         <ServiceWorkerRegister />
       </body>
     </html>
