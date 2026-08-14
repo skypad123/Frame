@@ -1,18 +1,16 @@
 import type { Metadata, Viewport } from "next";
-import { Press_Start_2P, VT323 } from "next/font/google";
+import { Bitcount_Single, Quicksand } from "next/font/google";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import "./globals.css";
 
-const pressStart = Press_Start_2P({
-  variable: "--font-press-start",
+const bitcount = Bitcount_Single({
+  variable: "--font-bitcount",
   subsets: ["latin"],
-  weight: "400",
 });
 
-const vt323 = VT323({
-  variable: "--font-vt323",
+const quicksand = Quicksand({
+  variable: "--font-quicksand",
   subsets: ["latin"],
-  weight: "400",
 });
 
 export const metadata: Metadata = {
@@ -48,7 +46,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${pressStart.variable} ${vt323.variable} h-full`}
+      className={`${bitcount.variable} ${quicksand.variable} h-full`}
     >
       <body className="min-h-full">
         {children}

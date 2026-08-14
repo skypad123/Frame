@@ -12,8 +12,8 @@
   --stone: #6b7785;
   --gate: #4a5560;
   --danger: #c45c4a;
-  --font-display: var(--font-press-start);
-  --font-body: var(--font-vt323);
+  --font-display: var(--font-bitcount);
+  --font-body: var(--font-quicksand);
   --pixel: 4px;
 }
 
@@ -39,11 +39,11 @@ body {
 body {
   margin: 0;
   color: var(--paper);
-  font-family: var(--font-body), "Courier New", monospace;
-  font-size: 1.35rem;
-  line-height: 1.35;
+  font-family: var(--font-body), "Avenir Next", "Segoe UI", sans-serif;
+  font-size: 1.125rem;
+  line-height: 1.55;
+  font-weight: 400;
   background: var(--night-deep);
-  image-rendering: pixelated;
 }
 
 a {
@@ -121,7 +121,7 @@ a {
 
 .tombstone-brand {
   margin: 0;
-  font-family: var(--font-display), monospace;
+  font-family: var(--font-display), sans-serif;
   font-size: clamp(1.55rem, 6.5vw, 3rem);
   line-height: 1.25;
   letter-spacing: 0.04em;
@@ -135,7 +135,7 @@ a {
 .tombstone-title {
   margin: 1.1rem 0 0;
   max-width: 16ch;
-  font-family: var(--font-display), monospace;
+  font-family: var(--font-display), sans-serif;
   font-size: clamp(0.78rem, 2.6vw, 1.05rem);
   line-height: 1.55;
   color: var(--paper);
@@ -163,7 +163,7 @@ a {
   justify-content: center;
   min-height: 2.75rem;
   padding: 0.65rem 1rem;
-  font-family: var(--font-display), monospace;
+  font-family: var(--font-display), sans-serif;
   font-size: 0.58rem;
   line-height: 1.4;
   text-decoration: none;
@@ -212,7 +212,7 @@ a {
 
 .section-title {
   margin: 0;
-  font-family: var(--font-display), monospace;
+  font-family: var(--font-display), sans-serif;
   font-size: clamp(0.72rem, 2.4vw, 0.95rem);
   line-height: 1.5;
   color: var(--lantern-soft);
@@ -292,7 +292,7 @@ a {
 }
 
 .credit-name {
-  font-family: var(--font-display), monospace;
+  font-family: var(--font-display), sans-serif;
   font-size: 0.62rem;
   line-height: 1.5;
   color: var(--paper);
@@ -306,7 +306,7 @@ a {
 .credit-linkedin {
   margin-top: 0.35rem;
   color: var(--lantern);
-  font-family: var(--font-display), monospace;
+  font-family: var(--font-display), sans-serif;
   font-size: 0.5rem;
 }
 
@@ -314,7 +314,7 @@ a {
   width: min(720px, calc(100% - 2rem));
   margin: 2.5rem auto 3rem;
   color: var(--stone);
-  font-family: var(--font-display), monospace;
+  font-family: var(--font-display), sans-serif;
   font-size: 0.5rem;
   letter-spacing: 0.04em;
 }
