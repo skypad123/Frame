@@ -134,10 +134,10 @@ a {
 
 .tombstone-title {
   margin: 1.1rem 0 0;
-  max-width: 16ch;
+  max-width: 18ch;
   font-family: var(--font-display), sans-serif;
-  font-size: clamp(0.78rem, 2.6vw, 1.05rem);
-  line-height: 1.55;
+  font-size: clamp(1.15rem, 3.8vw, 1.65rem);
+  line-height: 1.4;
   color: var(--paper);
   text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.65);
 }
@@ -164,8 +164,8 @@ a {
   min-height: 2.75rem;
   padding: 0.65rem 1rem;
   font-family: var(--font-display), sans-serif;
-  font-size: 0.58rem;
-  line-height: 1.4;
+  font-size: 0.9rem;
+  line-height: 1.35;
   text-decoration: none;
   border: 0;
   clip-path: polygon(
@@ -213,8 +213,8 @@ a {
 .section-title {
   margin: 0;
   font-family: var(--font-display), sans-serif;
-  font-size: clamp(0.72rem, 2.4vw, 0.95rem);
-  line-height: 1.5;
+  font-size: clamp(1.1rem, 3.2vw, 1.45rem);
+  line-height: 1.4;
   color: var(--lantern-soft);
   text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.45);
 }
@@ -293,21 +293,21 @@ a {
 
 .credit-name {
   font-family: var(--font-display), sans-serif;
-  font-size: 0.62rem;
-  line-height: 1.5;
+  font-size: 1rem;
+  line-height: 1.4;
   color: var(--paper);
 }
 
 .credit-role {
   color: var(--paper-dim);
-  font-size: 1.15rem;
+  font-size: 1rem;
 }
 
 .credit-linkedin {
   margin-top: 0.35rem;
   color: var(--lantern);
   font-family: var(--font-display), sans-serif;
-  font-size: 0.5rem;
+  font-size: 0.8rem;
 }
 
 .tombstone-end {
@@ -315,7 +315,7 @@ a {
   margin: 2.5rem auto 3rem;
   color: var(--stone);
   font-family: var(--font-display), sans-serif;
-  font-size: 0.5rem;
+  font-size: 0.8rem;
   letter-spacing: 0.04em;
 }
 
@@ -380,7 +380,7 @@ a {
   }
 
   .credit-name {
-    font-size: 0.54rem;
+    font-size: 0.9rem;
   }
 }
 
