@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useSyncExternalStore } from "react";
+import { Button } from "@/components/ui/button";
 
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>;
@@ -69,22 +70,24 @@ export function InstallPrompt() {
 
   if (deferred) {
     return (
-      <div className="install-banner">
-        <p>Install Frame on this device for one-tap counter lookups.</p>
-        <div className="install-actions">
-          <button type="button" className="ghost-btn" onClick={() => setDismissed(true)}>
+      <div className="sticky bottom-3 z-[5] mt-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[rgba(201,162,39,0.35)] bg-[rgba(7,20,33,0.92)] p-4 shadow-[var(--shadow)] backdrop-blur-[10px] animate-[rise_0.5s_ease_both]">
+        <p className="m-0 max-w-[36rem] text-sm text-[var(--paper-dim)]">
+          Install Frame on this device for one-tap counter lookups.
+        </p>
+        <div className="flex gap-2">
+          <Button variant="ghost" size="default" onClick={() => setDismissed(true)}>
             Not now
-          </button>
-          <button
-            type="button"
-            className="solid-btn"
+          </Button>
+          <Button
+            variant="default"
+            size="default"
             onClick={async () => {
               await deferred.prompt();
               setDeferred(null);
             }}
           >
             Install
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -92,14 +95,14 @@ export function InstallPrompt() {
 
   if (env.isIos) {
     return (
-      <div className="install-banner">
-        <p>
+      <div className="sticky bottom-3 z-[5] mt-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[rgba(201,162,39,0.35)] bg-[rgba(7,20,33,0.92)] p-4 shadow-[var(--shadow)] backdrop-blur-[10px] animate-[rise_0.5s_ease_both]">
+        <p className="m-0 text-sm text-[var(--paper-dim)]">
           On iPhone: tap Share, then <strong>Add to Home Screen</strong> for
           offline-ready lookups.
         </p>
-        <button type="button" className="ghost-btn" onClick={() => setDismissed(true)}>
+        <Button variant="ghost" size="default" onClick={() => setDismissed(true)}>
           Dismiss
-        </button>
+        </Button>
       </div>
     );
   }
