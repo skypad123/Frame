@@ -1,5 +1,5 @@
-import { PriceLookup } from "@/components/PriceLookup";
+import { RevampedHome } from "@/components/RevampedHome";
 
 export default function Home() {
-  return <PriceLookup />;
+  return <RevampedHome />;
 }
